@@ -1,7 +1,7 @@
 "use client";
 
 import { Handle, Position } from "@xyflow/react";
-import { Terminal, Cpu, Database, Cloud, HardDrive, Share2, Layers, Zap } from "lucide-react";
+import { Terminal, Cpu, Database, Cloud, HardDrive, Share2, Layers, Zap, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
@@ -26,16 +26,59 @@ const colorMap = {
   mq: "text-amber-500 bg-amber-500/10 border-amber-500/20",
 };
 
-export function SystemNode({ data, selected }: any) {
+export function SystemNode({ id, data, selected }: any) {
   const Icon = iconMap[data.type as keyof typeof iconMap] || Cpu;
   const colors = colorMap[data.type as keyof typeof colorMap] || colorMap.server;
 
+  const metrics = data.metrics || { rpm: 0, latency: 0, errorRate: 0 };
+  const isBottleneck = metrics.rpm > (data.config?.capacity || 1000) * 0.9;
+
   return (
     <div className={cn(
-      "px-4 py-2 shadow-md rounded-md bg-card border-2 transition-all min-w-[140px]",
+      "px-4 py-2 shadow-md rounded-md bg-card border-2 transition-all min-w-[170px] relative group/node",
       selected ? "border-primary shadow-lg ring-1 ring-primary/50" : "border-border",
-      data.isRunning ? "animate-pulse ring-2 ring-primary/20" : ""
+      data.isRunning ? "ring-2 ring-primary/20" : "",
+      isBottleneck ? "border-destructive animate-pulse" : ""
     )}>
+      {/* Settings Trigger */}
+      <button 
+        onClick={(e) => {
+          e.stopPropagation();
+          data.onOpenSettings?.(id);
+        }}
+        className="absolute -top-2 -right-2 p-1 bg-background border rounded-full shadow-sm opacity-0 group-hover/node:opacity-100 transition-opacity hover:border-primary hover:text-primary z-10"
+      >
+        <Settings2 size={12} />
+      </button>
+
+      {/* Metrics Overlay */}
+      {data.isRunning && (
+        <div className="absolute -top-12 left-0 right-0 flex flex-col items-center pointer-events-none">
+          <div className="bg-background/90 backdrop-blur-sm border rounded px-2 py-1 flex gap-3 shadow-sm border-primary/20">
+            <div className="flex flex-col items-center">
+              <span className="text-[8px] uppercase text-muted-foreground font-bold">RPM</span>
+              <span className={cn("text-xs font-mono font-bold", metrics.rpm > 0 ? "text-primary" : "text-muted-foreground")}>
+                {Math.round(metrics.rpm)}
+              </span>
+            </div>
+            <div className="flex flex-col items-center border-l pl-3">
+              <span className="text-[8px] uppercase text-muted-foreground font-bold">Lat</span>
+              <span className="text-xs font-mono font-bold text-sky-500">
+                {metrics.latency}ms
+              </span>
+            </div>
+            {metrics.errorRate > 0 && (
+              <div className="flex flex-col items-center border-l pl-3">
+                <span className="text-[8px] uppercase text-destructive font-bold">ERR</span>
+                <span className="text-xs font-mono font-bold text-destructive">
+                  {Math.round(metrics.errorRate * 100)}%
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <Handle type="target" position={Position.Top} className="w-2 h-2 !bg-muted-foreground border-none" />
       
       <div className="flex items-center gap-3">
