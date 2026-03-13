@@ -8,17 +8,17 @@ import { SignInButton, useAuth } from "@clerk/nextjs";
 function AuthButton({ isSignedIn }: { isSignedIn: boolean | undefined }) {
   if (isSignedIn) {
     return (
-      <Button asChild size="lg" className="h-12 px-8">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          Start Designing <ArrowRight className="w-4 h-4" />
+      <Button asChild size="lg" className="h-14 px-10 text-base font-black tracking-tight shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] transition-all">
+        <Link href="/dashboard" className="flex items-center gap-3">
+          Launch Simulator <ArrowRight className="w-5 h-5" />
         </Link>
       </Button>
     )
   }
   return (
     <SignInButton mode="modal">
-      <Button size="lg" className="h-12 px-8 flex items-center gap-2">
-        Start Designing <ArrowRight className="w-4 h-4" />
+      <Button size="lg" className="h-14 px-10 text-base font-black tracking-tight shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] transition-all flex items-center gap-3">
+        Start Designing <ArrowRight className="w-5 h-5" />
       </Button>
     </SignInButton>
   )
@@ -27,48 +27,65 @@ function AuthButton({ isSignedIn }: { isSignedIn: boolean | undefined }) {
 export function Hero() {
   const { isSignedIn } = useAuth();
   return (
-    <section className="relative pt-24 pb-12 md:pt-32 md:pb-24 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-background">
+      {/* Premium Background Effects */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] opacity-10"></div>
       
       <div className="container mx-auto px-4 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs font-medium mb-6 animate-in fade-in slide-in-from-bottom-3 duration-1000">
-          <span className="bg-primary/20 text-primary px-1.5 py-0.5 rounded">NEW</span>
-          <span>Interactive Visual Simulator is live!</span>
+        <div className="inline-flex items-center gap-3 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-bold mb-10 animate-in fade-in slide-in-from-bottom-3 duration-1000">
+          <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-[10px]">NEW</span>
+          <span className="text-primary tracking-wide">Interactive Visual Simulator v2.0 is live!</span>
         </div>
         
-        <h1 className="text-4xl md:text-7xl font-bold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
-          Design Distributed Systems <br className="hidden md:block" /> with Confidence
+        <h1 className="text-5xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-foreground">
+          Architect <span className="text-primary italic">Perfect</span> <br className="hidden md:block" /> Distributed Systems
         </h1>
         
-        <p className="max-w-[700px] mx-auto text-muted-foreground text-lg md:text-xl mb-10 text-pretty">
-          An interactive simulator for architects and developers. Drag, drop, and visualize data flow through clients, servers, and databases.
+        <p className="max-w-[800px] mx-auto text-muted-foreground text-lg md:text-2xl mb-12 text-pretty leading-relaxed font-medium">
+          The ultimate playground for engineers. Visualize data flow, identify bottlenecks, and stress-test your architecture before writing a single line of code.
         </p>
         
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
           <AuthButton isSignedIn={isSignedIn} />
-          <Button variant="outline" size="lg" className="h-12 px-8">
-            <Link href="#how-it-works">How it works</Link>
+          <Button variant="outline" size="lg" className="h-14 px-10 text-base font-bold bg-background border-border hover:bg-accent transition-all text-foreground">
+            <Link href="#how-it-works">Watch Demo</Link>
           </Button>
         </div>
         
-        {/* Floating Icons Representation */}
-        <div className="relative mt-20 max-w-5xl mx-auto border rounded-xl bg-card p-4 shadow-2xl overflow-hidden aspect-video flex items-center justify-center gap-8 md:gap-16 grayscale opacity-50 dark:grayscale-0 dark:opacity-100 transition-all">
-           <div className="flex flex-col items-center gap-2">
-             <Terminal className="w-12 h-12 text-blue-500" />
-             <span className="text-xs font-mono uppercase tracking-widest">Client</span>
-           </div>
-           <div className="w-12 h-[2px] bg-primary/20 relative hidden md:block">
-              <div className="absolute top-1/2 left-0 w-2 h-2 bg-primary rounded-full -translate-y-1/2 animate-ping"></div>
-           </div>
-           <div className="flex flex-col items-center gap-2">
-             <Cpu className="w-12 h-12 text-primary" />
-             <span className="text-xs font-mono uppercase tracking-widest text-primary">API Gateway</span>
-           </div>
-           <div className="w-12 h-[2px] bg-primary/20 relative hidden md:block"></div>
-           <div className="flex flex-col items-center gap-2">
-             <Database className="w-12 h-12 text-green-500" />
-             <span className="text-xs font-mono uppercase tracking-widest">Database</span>
+        {/* Premium Visualization Mockup */}
+        <div className="relative mt-20 max-w-6xl mx-auto rounded-[32px] border border-border bg-card/40 p-4 shadow-[0_0_100px_rgba(var(--primary),0.1)] overflow-hidden transition-all group">
+           <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+           <div className="relative rounded-[24px] border border-border bg-muted aspect-video flex items-center justify-center gap-8 md:gap-24 overflow-hidden p-8">
+              {/* Grid Overlay */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:40px_40px] opacity-10"></div>
+              
+              <div className="flex flex-col items-center gap-4 z-10 group/node">
+                <div className="w-20 h-20 rounded-2xl bg-card border border-border flex items-center justify-center group-hover/node:border-primary/50 group-hover/node:bg-primary/10 transition-all duration-500 shadow-xl">
+                  <Terminal className="w-10 h-10 text-primary" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground group-hover/node:text-primary transition-colors">Client_Node</span>
+              </div>
+
+              <div className="w-32 h-[2px] bg-gradient-to-r from-primary to-transparent relative hidden md:block">
+                 <div className="absolute top-1/2 left-0 w-3 h-3 bg-primary rounded-full -translate-y-1/2 shadow-[0_0_15px_rgba(var(--primary),1)] animate-[move_3s_infinite_linear]"></div>
+              </div>
+
+              <div className="flex flex-col items-center gap-4 z-10 group/node">
+                <div className="w-24 h-24 rounded-3xl bg-primary border-4 border-background flex items-center justify-center shadow-[0_0_30px_rgba(var(--primary),0.3)] scale-110">
+                  <Cpu className="w-12 h-12 text-primary-foreground" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Load_Balancer</span>
+              </div>
+
+              <div className="w-32 h-[2px] bg-gradient-to-l from-green-500 to-transparent relative hidden md:block"></div>
+
+              <div className="flex flex-col items-center gap-4 z-10 group/node">
+                <div className="w-20 h-20 rounded-2xl bg-card border border-border flex items-center justify-center  group-hover/node:border-green-500/50 group-hover/node:bg-green-500/10 transition-all duration-500 shadow-xl">
+                  <Database className="w-10 h-10 text-green-500" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground group-hover/node:text-green-500 transition-colors">Store_DB</span>
+              </div>
            </div>
         </div>
       </div>

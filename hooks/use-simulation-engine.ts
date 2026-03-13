@@ -59,11 +59,22 @@ export function useSimulationEngine(
       const config = node.data.config || { capacity: 1000, latency: 50 };
       
       let finalRpm = metrics.rpm;
-      let errorRate = node.data.config?.errorRate / 100 || 0;
+      let baseLatency = config.latency || 50;
+      let errorRate = (node.data.config?.errorRate / 100) || 0;
       
-      if (finalRpm > config.capacity) {
+      // Dynamic Latency & Error Rate based on load
+      // As RPM approaches capacity, latency increases (Queuing Delay)
+      const loadFactor = finalRpm / config.capacity;
+      
+      let effectiveLatency = baseLatency;
+      if (loadFactor > 0.8) {
+        // Exponential latency growth near capacity
+        effectiveLatency = Math.round(baseLatency * (1 + Math.pow(loadFactor - 0.8, 2) * 10));
+      }
+
+      if (loadFactor > 1) {
+        // High error rate beyond capacity
         errorRate += (finalRpm - config.capacity) / finalRpm;
-        // finalRpm = config.capacity; // Optional: Cap the flow
       }
 
       return {
@@ -72,7 +83,7 @@ export function useSimulationEngine(
           ...node.data,
           metrics: {
             rpm: finalRpm,
-            latency: config.latency,
+            latency: Math.min(effectiveLatency, 5000), // Cap at 5s
             errorRate: Math.min(errorRate, 1)
           }
         }

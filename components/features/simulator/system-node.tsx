@@ -1,29 +1,37 @@
 "use client";
 
 import { Handle, Position } from "@xyflow/react";
-import { Terminal, Cpu, Database, Cloud, HardDrive, Share2, Layers, Zap, Settings2 } from "lucide-react";
+import { Terminal, Cpu, Database, Cloud, HardDrive, Share2, Layers, Zap, Settings2, Box, Shield, CreditCard, MessageSquare, ArrowRightLeft, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
   client: Terminal,
-  server: Cpu,
-  database: Database,
+  microservice: Box,
+  auth_service: Shield,
+  payment_service: CreditCard,
+  postgres: Database,
+  mongodb: Database,
+  redis: Zap,
+  rabbitmq: MessageSquare,
+  kafka: ArrowRightLeft,
   api_gateway: Share2,
-  cache: Zap,
-  cdn: Cloud,
   lb: Layers,
-  mq: HardDrive,
+  server: Server,
 };
 
 const colorMap = {
   client: "text-blue-500 bg-blue-500/10 border-blue-500/20",
-  server: "text-primary bg-primary/10 border-primary/20",
-  database: "text-green-500 bg-green-500/10 border-green-500/20",
+  microservice: "text-primary bg-primary/10 border-primary/20",
+  auth_service: "text-indigo-500 bg-indigo-500/10 border-indigo-500/20",
+  payment_service: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
+  postgres: "text-blue-600 bg-blue-600/10 border-blue-600/20",
+  mongodb: "text-green-600 bg-green-600/10 border-green-600/20",
+  redis: "text-orange-500 bg-orange-500/10 border-orange-500/20",
+  rabbitmq: "text-orange-600 bg-orange-600/10 border-orange-600/20",
+  kafka: "text-slate-400 bg-slate-400/10 border-slate-400/20",
   api_gateway: "text-purple-500 bg-purple-500/10 border-purple-500/20",
-  cache: "text-orange-500 bg-orange-500/10 border-orange-500/20",
-  cdn: "text-sky-500 bg-sky-500/10 border-sky-500/20",
   lb: "text-rose-500 bg-rose-500/10 border-rose-500/20",
-  mq: "text-amber-500 bg-amber-500/10 border-amber-500/20",
+  server: "text-primary bg-primary/10 border-primary/20",
 };
 
 export function SystemNode({ id, data, selected }: any) {

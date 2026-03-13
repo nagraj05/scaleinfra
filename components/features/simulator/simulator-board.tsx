@@ -68,14 +68,20 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
     }
   };
 
-  // Track changes
-  const isInitialMount = useRef(true);
+  // Track changes to persistent data only
+  const lastSavedData = useRef(JSON.stringify({ nodes: initialData.nodes, edges: initialData.edges }));
+  
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
+    const currentData = JSON.stringify({ 
+      nodes: nodes.map(n => ({ id: n.id, type: n.type, position: n.position, data: { ...n.data, isRunning: false } })), 
+      edges: edges.map(e => ({ id: e.id, source: e.source, target: e.target })) 
+    });
+    
+    if (currentData !== lastSavedData.current) {
+      setHasUnsavedChanges(true);
+    } else {
+      setHasUnsavedChanges(false);
     }
-    setHasUnsavedChanges(true);
   }, [nodes, edges]);
 
   // Integrated Simulation Engine
@@ -163,7 +169,14 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
         .eq("id", params.id);
 
       if (error) throw error;
-       setSaving(false);
+      
+      // Update baseline to ignore changes made before this save
+      lastSavedData.current = JSON.stringify({ 
+        nodes: nodes.map(n => ({ id: n.id, type: n.type, position: n.position, data: { ...n.data, isRunning: false } })), 
+        edges: edges.map(e => ({ id: e.id, source: e.source, target: e.target })) 
+      });
+      
+      setSaving(false);
       setHasUnsavedChanges(false);
       toast.success("Simulation saved successfully");
     } catch (error) {
@@ -214,31 +227,47 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
           <Background color="#ccc" variant={"dots" as any} gap={20} />
           <Controls />
           
-          <Panel position="top-right" className="flex gap-2">
+          <Panel position="top-right" className="flex gap-4 p-4">
             <Button variant="outline" size="sm" onClick={deleteSelected} className="gap-2 bg-card">
               <Trash2 className="w-4 h-4 text-destructive" /> Delete
             </Button>
-            <Button variant="outline" size="sm" onClick={handleSave} disabled={saving} className="gap-2 bg-card">
-              <Save className="w-4 h-4" /> {saving ? "Saving..." : "Save"}
+            <Button 
+              onClick={handleSave} 
+              disabled={saving} 
+              className="gap-3 h-12 px-8 font-black uppercase tracking-widest shadow-xl"
+            >
+              <Save className="w-5 h-5" /> 
+              {saving ? "Saving..." : "Save Simulation"}
             </Button>
-            <Button onClick={toggleSimulation} variant={isRunning ? "destructive" : "default"} size="sm" className="gap-2 shadow-lg">
-              <Play className={isRunning ? "fill-current" : ""} size={16} /> 
-              {isRunning ? "Stop simulation" : "Run simulation"}
+            <Button 
+              variant={isRunning ? "destructive" : "secondary"} 
+              onClick={toggleSimulation}
+              className="gap-3 h-12 px-8 font-black uppercase tracking-widest shadow-xl"
+            >
+              {isRunning ? (
+                <><Trash2 className="w-5 h-5" /> Stop</>
+              ) : (
+                <><Play className="w-5 h-5" /> Run</>
+              )}
             </Button>
           </Panel>
 
-          <Panel position="top-left" className="flex gap-2">
+          <Panel position="top-left" className="flex gap-4 p-4">
              <Button 
                variant="outline" 
-               size="sm" 
+               size="lg" 
                onClick={handleBack}
-               className="gap-2 bg-card hover:bg-muted transition-colors font-bold text-xs"
+               className="gap-3 h-12 px-8 bg-card/[0.05] hover:bg-accent border-border transition-all font-black text-sm uppercase tracking-widest rounded-2xl"
              >
-               <ChevronLeft className="w-4 h-4" /> Back to Dashboard
+               <ChevronLeft className="w-5 h-5 text-primary" /> 
+               <span className="text-foreground">Dashboard</span>
              </Button>
-             <div className="px-4 py-2 bg-card border rounded-lg shadow-sm flex items-center gap-3">
-               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-               <span className="text-xs font-mono font-bold uppercase tracking-widest">{initialData.name}</span>
+             <div className="px-8 py-3 bg-card border border-border rounded-2xl shadow-2xl flex items-center gap-4 backdrop-blur-xl">
+               <div className="w-3 h-3 rounded-full bg-primary animate-pulse shadow-[0_0_15px_rgba(var(--primary),0.5)]" />
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary leading-none mb-1">Active Design</span>
+                 <span className="text-base font-black text-foreground tracking-tight leading-none uppercase">{initialData.name}</span>
+               </div>
              </div>
           </Panel>
         </ReactFlow>

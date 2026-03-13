@@ -14,10 +14,22 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 export default function Dashboard() {
   const { user } = useUser();
   const { getToken } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [simToDelete, setSimToDelete] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // Fetch simulations
@@ -38,12 +50,7 @@ export default function Dashboard() {
     enabled: !!user?.id,
   });
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!confirm("Are you sure you want to delete this simulation?")) return;
-
+  const handleDelete = async (id: string) => {
     try {
       const token = await getToken({ template: "supabase" });
       const supabase = createSupabaseClient(token || undefined);
@@ -60,24 +67,26 @@ export default function Dashboard() {
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete simulation");
+    } finally {
+      setSimToDelete(null);
     }
   };
 
   const quotaColor = simulations?.length && simulations.length >= 3 ? "text-destructive" : "text-primary";
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#050505] text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground font-sans">
       <Navbar />
       <main className="flex-grow pt-28 px-4 sm:px-8">
         <div className="container mx-auto max-w-7xl">
           {/* Header Area */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-border/50 pb-8">
-            <div className="space-y-1">
-              <h1 className="text-4xl font-black tracking-tight flex items-center gap-3">
+            <div className="space-y-2">
+              <h1 className="text-5xl font-black tracking-tighter flex items-center gap-4 text-foreground uppercase">
                 Applications
               </h1>
-              <p className="text-muted-foreground text-sm font-medium">
-                Manage your system design simulations and cloud environments.
+              <p className="text-muted-foreground text-lg font-bold max-w-2xl leading-relaxed">
+                Management portal for your distributed system architecture simulations and cloud environment blueprints.
               </p>
             </div>
             
@@ -93,7 +102,7 @@ export default function Dashboard() {
               <div className="h-10 w-[1px] bg-border/50" />
               <div className="w-24 bg-muted/30 h-1.5 rounded-full overflow-hidden">
                 <div 
-                  className={cn("h-full transition-all duration-500", simulations?.length && simulations.length >= 3 ? "bg-destructive" : "bg-primary")}
+                   className={cn("h-full transition-all duration-500", simulations?.length && simulations.length >= 3 ? "bg-destructive" : "bg-primary")}
                   style={{ width: `${Math.min(((simulations?.length || 0) / 3) * 100, 100)}%` }}
                 />
               </div>
@@ -136,7 +145,11 @@ export default function Dashboard() {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                              onClick={(e) => handleDelete(e, sim.id)}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setSimToDelete(sim.id);
+                              }}
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -190,6 +203,33 @@ export default function Dashboard() {
         onClose={() => setIsModalOpen(false)} 
         simCount={simulations?.length || 0}
       />
+
+      <AlertDialog open={!!simToDelete} onOpenChange={(open) => !open && setSimToDelete(null)}>
+        <AlertDialogContent className="rounded-[24px] border border-border/50 bg-background/95 backdrop-blur-xl shadow-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl font-black uppercase tracking-tight flex items-center gap-3">
+              <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              Delete Simulation?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base font-bold text-muted-foreground pt-4 leading-relaxed">
+              This action cannot be undone. All nodes, edges, and configuration data for this system architecture will be permanently removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-8 gap-4">
+            <AlertDialogCancel className="rounded-xl font-black uppercase tracking-widest text-xs h-12 px-6 border border-border/50 hover:bg-white/5 transition-all">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => simToDelete && handleDelete(simToDelete)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl font-black uppercase tracking-widest text-xs h-12 px-8 transition-all shadow-lg"
+            >
+              Delete Permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
