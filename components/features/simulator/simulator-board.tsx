@@ -18,7 +18,7 @@ import "@xyflow/react/dist/style.css";
 import { Sidebar } from "@/components/features/simulator/sidebar";
 import { SystemNode } from "@/components/features/simulator/system-node";
 import { Button } from "@/components/ui/button";
-import { Save, Trash2, Settings2, ChevronLeft, Play } from "lucide-react";
+import { Save, Trash2, Settings2, ChevronLeft, Play, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createSupabaseClient } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -31,6 +31,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   AlertDialog,
@@ -284,60 +285,96 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
       toast.info("Simulation stopped.");
     }
   };
+  const handleAddInSimulator = useCallback((type: string, label: string) => {
+    const position = { x: 100, y: 100 };
+    const newNode = {
+      id: getId(),
+      type: type === 'annotation' ? 'annotation' : type === 'group' ? 'group' : 'system',
+      position,
+      data: { label, type },
+    };
+    setNodes((nds) => nds.concat(newNode));
+    toast.success(`Added ${label}`);
+  }, [setNodes]);
+
+  if (!mounted) return null;
 
   return (
     <div className="flex h-full w-full bg-background overflow-hidden border rounded-xl shadow-2xl">
-      <Sidebar />
+      <div className="hidden md:block">
+        <Sidebar className="w-80" onAdd={handleAddInSimulator} />
+      </div>
       <div 
         className={cn(
-          "flex-grow flex flex-col h-full relative",
+          "flex-1 flex flex-col min-w-0 transition-all duration-300",
           mounted && resolvedTheme === 'dark' ? 'bg-black/20' : 'bg-muted/5'
         )} 
         ref={reactFlowWrapper}
       >
         {/* Top Toolbar */}
-        <div className="h-20 border-b bg-background/80 backdrop-blur-md px-6 flex items-center justify-between z-20 shrink-0">
-          <div className="flex items-center gap-4">
+        <div className="h-auto md:h-20 border-b bg-background/80 backdrop-blur-md px-4 md:px-6 py-4 md:py-0 flex flex-col md:flex-row items-center justify-between gap-4 z-20 shrink-0">
+          <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto overflow-x-auto no-scrollbar pb-1 md:pb-0">
              <Button
                variant="outline"
-               size="lg"
+               size="sm"
                onClick={handleBack}
-               className="gap-3 h-11 px-6 bg-card/[0.05] hover:bg-accent border-border transition-all font-black text-sm uppercase tracking-widest rounded-xl"
+               className="gap-2 md:gap-3 h-9 md:h-11 px-3 md:px-6 bg-card/[0.05] hover:bg-accent border-border transition-all font-black text-[10px] md:text-sm uppercase tracking-widest rounded-lg md:rounded-xl shrink-0"
              >
-               <ChevronLeft className="w-5 h-5 text-primary" /> 
-               <span className="text-foreground">Dashboard</span>
+               <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-primary" /> 
+               <span className="text-foreground">Exit</span>
              </Button>
-             <div className="h-11 px-6 bg-card border border-border rounded-xl shadow-sm flex items-center gap-4">
-               <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
+             
+             {/* Mobile Sidebar Trigger */}
+             <Sheet>
+               <SheetTrigger asChild>
+                 <Button variant="outline" size="sm" className="md:hidden gap-2 h-9 px-3 font-black uppercase tracking-widest text-[10px] rounded-lg bg-primary/10 border-primary/20 text-primary">
+                    <Plus className="w-4 h-4" /> Components
+                 </Button>
+               </SheetTrigger>
+               <SheetContent side="left" className="p-0 sm:max-w-xs">
+                 <SheetHeader className="sr-only">
+                    <SheetTitle>Components Sidebar</SheetTitle>
+                 </SheetHeader>
+                 <Sidebar 
+                    className="w-full border-none shadow-none" 
+                    onAdd={handleAddInSimulator}
+                 />
+               </SheetContent>
+             </Sheet>
+
+             <div className="h-9 md:h-11 px-3 md:px-6 bg-card border border-border rounded-lg md:rounded-xl shadow-sm flex items-center gap-2 md:gap-4 shrink-0">
+               <div className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-primary animate-pulse" />
                <div className="flex flex-col justify-center">
-                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary leading-none mb-1">Active Design</span>
-                 <span className="text-sm font-black text-foreground tracking-tight leading-none uppercase">{initialData.name}</span>
+                 <span className="text-[7px] md:text-[9px] font-black uppercase tracking-[0.2em] text-primary leading-none mb-0.5 md:mb-1">Active Design</span>
+                 <span className="text-xs md:text-sm font-black text-foreground tracking-tight leading-none uppercase truncate max-w-[100px] md:max-w-none">{initialData.name}</span>
                </div>
              </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-end">
             <Button
               variant="outline"
+              size="sm"
               onClick={handleSave}
               disabled={saving}
-              className="gap-3 h-11 px-6 font-black uppercase tracking-widest border-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
+              className="gap-2 md:gap-3 h-9 md:h-11 px-3 md:px-4 font-black uppercase tracking-widest border-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-lg md:rounded-xl text-[10px] md:text-sm flex-grow md:flex-grow-0"
             >
-              <Save className="w-5 h-5" />
-              {saving ? "Saving..." : "Save Simulation"}
+              <Save className="w-4 h-4 md:w-5 md:h-5" />
+              {saving ? "..." : "Save"}
             </Button>
             <Button
               variant={isRunning ? "destructive" : "default"}
+              size="sm"
               onClick={toggleSimulation}
-              className="gap-3 h-11 px-8 font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all duration-300 rounded-xl"
+              className="gap-2 md:gap-3 h-9 md:h-11 px-4 md:px-8 font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all duration-300 rounded-lg md:rounded-xl text-[10px] md:text-sm flex-grow md:flex-grow-0"
             >
               {isRunning ? (
                 <>
-                  <Trash2 className="w-5 h-5 fill-current" /> Stop Simulation
+                  <Trash2 className="w-4 h-4 md:w-5 md:h-5 fill-current" /> Stop
                 </>
               ) : (
                 <>
-                  <Play className="w-5 h-5 fill-current" /> Start Simulation
+                  <Play className="w-4 h-4 md:w-5 md:h-5 fill-current" /> Start
                 </>
               )}
             </Button>

@@ -3,13 +3,12 @@
 import { useAuth, useUser } from "@clerk/nextjs";
 import { Navbar } from "@/components/shared/navbar";
 import { Button } from "@/components/ui/button";
-import { Plus, Layout, Clock, ChevronRight, Trash2, Box, ExternalLink, AlertCircle } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { useState, useMemo } from "react";
+import { Plus, Trash2, Box, ExternalLink, AlertCircle } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useState } from "react";
 import { CreateSimulationModal } from "@/components/features/dashboard/create-simulation-modal";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createSupabaseClient } from "@/lib/supabase";
-import { SimulationSkeleton } from "@/components/skeletons/simulation-skeleton";
 import { toast } from "sonner";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -80,27 +79,27 @@ export default function Dashboard() {
       <main className="flex-grow pt-28 px-4 sm:px-8">
         <div className="container mx-auto max-w-7xl">
           {/* Header Area */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-border/50 pb-8">
-            <div className="space-y-2">
-              <h1 className="text-5xl font-black tracking-tighter flex items-center gap-4 text-foreground uppercase">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 md:mb-12 gap-6 border-b border-border/50 pb-8">
+            <div className="space-y-4 md:space-y-2">
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter flex items-center gap-4 text-foreground uppercase">
                 Applications
               </h1>
-              <p className="text-muted-foreground text-lg font-bold max-w-2xl leading-relaxed">
+              <p className="text-muted-foreground text-base md:text-lg font-bold max-w-2xl leading-relaxed">
                 Management portal for your distributed system architecture simulations and cloud environment blueprints.
               </p>
             </div>
             
             {/* Subtle Quota Counter */}
-            <div className="flex items-center gap-6 bg-card/50 px-6 py-3 rounded-2xl border border-border/50 backdrop-blur-sm self-start md:self-auto">
+            <div className="flex items-center gap-4 md:gap-6 bg-card/50 px-4 md:px-6 py-3 rounded-2xl border border-border/50 backdrop-blur-sm w-full sm:w-auto self-start">
               <div className="space-y-1">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold leading-none">Usage Quota</p>
                 <div className="flex items-baseline gap-1">
-                  <span className={cn("text-2xl font-black leading-none", quotaColor)}>{simulations?.length || 0}</span>
-                  <span className="text-muted-foreground text-xs font-bold leading-none">/ 3 Simulations</span>
+                  <span className={cn("text-xl md:text-2xl font-black leading-none", quotaColor)}>{simulations?.length || 0}</span>
+                  <span className="text-muted-foreground text-[10px] md:text-xs font-bold leading-none">/ 3 Sims</span>
                 </div>
               </div>
               <div className="h-10 w-[1px] bg-border/50" />
-              <div className="w-24 bg-muted/30 h-1.5 rounded-full overflow-hidden">
+              <div className="flex-grow sm:flex-grow-0 sm:w-24 bg-muted/30 h-1.5 rounded-full overflow-hidden">
                 <div 
                    className={cn("h-full transition-all duration-500", simulations?.length && simulations.length >= 3 ? "bg-destructive" : "bg-primary")}
                   style={{ width: `${Math.min(((simulations?.length || 0) / 3) * 100, 100)}%` }}

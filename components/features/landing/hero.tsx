@@ -39,23 +39,23 @@ export function Hero() {
           <span className="text-primary tracking-wide">Interactive Visual Simulator v2.0 is live!</span>
         </div>
         
-        <h1 className="text-5xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-foreground">
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-6 md:mb-8 leading-[0.9] text-foreground">
           Architect <span className="text-primary italic">Perfect</span> <br className="hidden md:block" /> Distributed Systems
         </h1>
         
-        <p className="max-w-[800px] mx-auto text-muted-foreground text-lg md:text-2xl mb-12 text-pretty leading-relaxed font-medium">
+        <p className="max-w-[800px] mx-auto text-muted-foreground text-sm md:text-2xl mb-8 md:mb-12 text-pretty leading-relaxed font-medium px-4">
           The ultimate playground for engineers. Visualize data flow, identify bottlenecks, and stress-test your architecture before writing a single line of code.
         </p>
         
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 mb-16 md:mb-24">
           <AuthButton isSignedIn={isSignedIn} />
-          <Button variant="outline" size="lg" className="h-14 px-10 text-base font-bold bg-background border-border hover:bg-accent transition-all text-foreground">
+          <Button variant="outline" size="lg" className="h-14 px-10 text-base font-bold bg-background border-border hover:bg-accent transition-all text-foreground w-full sm:w-auto">
             <Link href="#how-it-works">Watch Demo</Link>
           </Button>
         </div>
         
         {/* Premium Visualization Mockup */}
-        <div className="relative mt-20 max-w-6xl mx-auto rounded-[32px] border border-border bg-card/40 p-4 shadow-[0_0_100px_rgba(var(--primary),0.1)] overflow-hidden transition-all group">
+        <div className="relative mt-10 md:mt-20 max-w-6xl mx-auto rounded-[24px] md:rounded-[32px] border border-border bg-card/40 p-2 md:p-4 shadow-[0_0_100px_rgba(var(--primary),0.1)] overflow-hidden transition-all group">
            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
            <div className="relative rounded-[24px] border border-border bg-muted aspect-video flex items-center justify-center gap-8 md:gap-24 overflow-hidden p-8">
               {/* Grid Overlay */}

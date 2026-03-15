@@ -32,6 +32,7 @@ import {
   Maximize,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const elements = [
   {
@@ -281,7 +282,12 @@ const elements = [
   },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  className?: string;
+  onAdd?: (type: string, label: string) => void;
+}
+
+export function Sidebar({ className, onAdd }: SidebarProps) {
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
@@ -290,7 +296,7 @@ export function Sidebar() {
   const categories = Array.from(new Set(elements.map((el) => el.category)));
 
   return (
-    <aside className="w-80 border-r bg-card h-full p-8 overflow-y-auto custom-scrollbar">
+    <aside className={cn("w-full md:w-80 border-r bg-card h-full p-4 md:p-8 overflow-y-auto custom-scrollbar", className)}>
       <div className="space-y-1 mb-10">
         <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary">
           Components
@@ -314,9 +320,10 @@ export function Sidebar() {
                     key={el.type}
                     className="group cursor-grab active:cursor-grabbing"
                     onDragStart={(event) => onDragStart(event, el.type)}
+                    onClick={() => onAdd?.(el.type, el.label)}
                     draggable
                   >
-                    <Card className="p-3.5 flex items-center gap-4 hover:border-primary/50 transition-all duration-300 border-border bg-muted/20 hover:bg-muted/40 rounded-xl group shadow-none hover:shadow-lg hover:shadow-primary/5">
+                    <Card className="p-3 md:p-3.5 flex items-center gap-3 md:gap-4 hover:border-primary/50 transition-all duration-300 border-border bg-muted/20 hover:bg-muted/40 rounded-xl group shadow-none hover:shadow-lg hover:shadow-primary/5">
                       <div
                         className={`p-2.5 rounded-lg bg-background border border-border ${el.color} group-hover:border-primary/30 transition-all`}
                       >
@@ -326,6 +333,7 @@ export function Sidebar() {
                         <span className="text-xs font-black text-foreground group-hover:text-primary transition-colors tracking-tight">
                           {el.label}
                         </span>
+                        <span className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest md:hidden">Tap to add</span>
                       </div>
                     </Card>
                   </div>

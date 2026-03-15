@@ -36,16 +36,16 @@ export default function Home() {
         <Hero />
         
         {/* Features Section */}
-        <section id="how-it-works" className="py-32 bg-muted/30 relative overflow-hidden">
+        <section id="how-it-works" className="py-20 md:py-32 bg-muted/30 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent opacity-20"></div>
           <div className="container mx-auto px-4">
-            <div className="text-center mb-24">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 text-foreground text-balance">The Engineer&apos;s Sandbox</h2>
-              <p className="text-muted-foreground text-xl max-w-3xl mx-auto font-medium leading-relaxed">
+            <div className="text-center mb-16 md:mb-24">
+              <h2 className="text-3xl md:text-6xl font-black tracking-tighter mb-4 md:mb-6 text-foreground text-balance">The Engineer&apos;s Sandbox</h2>
+              <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto font-medium leading-relaxed">
                 Everything you need to design, simulate, and optimize complex system architectures in one place.
               </p>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {[
                 { 
                   title: "Ultra-Fast Design", 
@@ -70,11 +70,11 @@ export default function Home() {
                 }
               ].map((feature, i) => (
                 <div key={i} className="group relative p-8 rounded-[32px] bg-card border border-border hover:border-primary/50 transition-all duration-500 shadow-sm">
-                  <div className={`w-14 h-14 rounded-2xl ${feature.bg} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
+                  <div className={`w-14 h-14 rounded-2xl ${feature.bg} flex items-center justify-center mb-6 md:mb-8 group-hover:scale-110 transition-transform`}>
                     <feature.icon className={`w-7 h-7 ${feature.color}`} />
                   </div>
-                  <h3 className="text-2xl font-black mb-4 text-foreground tracking-tight">{feature.title}</h3>
-                  <p className="text-muted-foreground text-lg leading-relaxed font-medium">{feature.desc}</p>
+                  <h3 className="text-xl md:text-2xl font-black mb-4 text-foreground tracking-tight">{feature.title}</h3>
+                  <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-medium">{feature.desc}</p>
                 </div>
               ))}
             </div>
@@ -82,24 +82,24 @@ export default function Home() {
         </section>
 
         {/* Pricing Section (Redesigned) */}
-        <section id="pricing" className="py-32 bg-background">
+        <section id="pricing" className="py-20 md:py-32 bg-background">
           <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 text-foreground">Scale Your Curiosity</h2>
-              <p className="text-muted-foreground text-xl max-w-2xl mx-auto font-medium">
+            <div className="text-center mb-16 md:mb-20">
+              <h2 className="text-3xl md:text-6xl font-black tracking-tighter mb-4 md:mb-6 text-foreground">Scale Your Curiosity</h2>
+              <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium px-4">
                 Choose the workspace that fits your engineering journey.
               </p>
             </div>
-            <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-5xl mx-auto">
               {/* Starter Plan */}
-              <div className="relative group p-10 rounded-[40px] bg-card border border-border hover:border-primary/20 transition-all shadow-sm">
+              <div className="relative group p-8 md:p-10 rounded-[32px] md:rounded-[40px] bg-card border border-border hover:border-primary/20 transition-all shadow-sm">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-3xl font-black text-foreground tracking-tight">Starter</h3>
+                    <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Starter</h3>
                     <p className="text-muted-foreground font-medium mt-1">Perfect for individuals and learning.</p>
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-6xl font-black text-foreground">$0</span>
+                    <span className="text-5xl md:text-6xl font-black text-foreground">$0</span>
                     <span className="text-muted-foreground font-bold tracking-widest text-xs uppercase text-opacity-70 text-foreground">Perpetual Free</span>
                   </div>
                   <ul className="space-y-4 py-8 border-y border-border">
@@ -119,15 +119,15 @@ export default function Home() {
               </div>
 
               {/* Architect Plan */}
-              <div className="relative p-[2px] rounded-[40px] bg-gradient-to-tr from-primary to-blue-500 overflow-hidden shadow-[0_0_50px_rgba(var(--primary),0.2)]">
-                <div className="relative p-10 rounded-[38px] bg-card h-full space-y-6">
+              <div className="relative p-[2px] rounded-[32px] md:rounded-[40px] bg-gradient-to-tr from-primary to-blue-500 overflow-hidden shadow-[0_0_50px_rgba(var(--primary),0.2)]">
+                <div className="relative p-8 md:p-10 rounded-[30px] md:rounded-[38px] bg-card h-full space-y-6">
                   <div className="absolute top-8 right-8 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-black text-primary tracking-widest uppercase">Most Popular</div>
                   <div>
-                    <h3 className="text-3xl font-black text-foreground tracking-tight italic">Architect</h3>
+                    <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tight italic">Architect</h3>
                     <p className="text-muted-foreground font-medium mt-1">For serious system design.</p>
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-6xl font-black text-foreground">$19</span>
+                    <span className="text-5xl md:text-6xl font-black text-foreground">$19</span>
                     <span className="text-muted-foreground font-bold tracking-widest text-xs uppercase">/ Billed monthly</span>
                   </div>
                   <ul className="space-y-4 py-8 border-y border-border">

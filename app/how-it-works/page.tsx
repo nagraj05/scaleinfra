@@ -12,10 +12,8 @@ import {
   Activity, 
   ArrowRight,
   Info,
-  BarChart3,
   Server,
   Layout,
-  Network,
   Box
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -79,7 +77,7 @@ const initialEdges: Edge[] = [
   { id: "e5-6", source: "5", target: "6", animated: true, style: { stroke: "#ef4444", strokeWidth: 2 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#ef4444" } },
 ];
 
-const Share2 = (props: any) => (
+const Share2 = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     {...props}
     xmlns="http://www.w3.org/2000/svg"
@@ -207,44 +205,41 @@ export default function HowItWorks() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-32"
+            className="text-center mb-16 md:mb-32"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 md:mb-8">
               <Info className="w-4 h-4" /> The Science of Scaling
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 text-foreground leading-[0.9]">
+            <h1 className="text-4xl md:text-8xl font-black tracking-tighter mb-6 md:mb-8 text-foreground leading-[0.9]">
               How it <span className="text-primary italic">Actually</span> Works.
             </h1>
-            <p className="text-muted-foreground text-xl max-w-3xl mx-auto font-medium leading-relaxed">
+            <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto font-medium leading-relaxed px-4">
               ScaleInfra isn&apos;t just a drawing tool. It&apos;s a formal mathematical simulator that uses Queuing Theory 
               and Statistical Distributions to predict how your system behaves under load.
             </p>
           </motion.div>
 
           {/* Core Math Section */}
-          <section className="mb-48">
-             <div className="flex flex-col md:flex-row items-end justify-between gap-8 mb-16 border-b border-border pb-8">
+          <section className="mb-24 md:mb-48">
+             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-12 md:mb-16 border-b border-border pb-8">
                 <div>
-                   <h2 className="text-4xl font-black tracking-tight text-foreground uppercase">The Mathematics</h2>
-                   <p className="text-muted-foreground font-bold mt-2 uppercase tracking-widest text-xs">Behind every packet and every millisecond</p>
+                   <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground uppercase">The Mathematics</h2>
+                   <p className="text-muted-foreground font-bold mt-2 uppercase tracking-widest text-[10px]">Behind every packet and every millisecond</p>
                 </div>
-                <div className="px-6 py-3 bg-muted/30 rounded-2xl border border-border text-xs font-bold text-muted-foreground italic">
+                <div className="px-4 md:px-6 py-2 md:py-3 bg-muted/30 rounded-2xl border border-border text-[10px] font-bold text-muted-foreground italic w-fit">
                    Discrete-Time Simulation Engine (v2.0)
                 </div>
              </div>
 
-             <div className="grid md:grid-cols-3 gap-8">
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {mathConcepts.map((concept, i) => (
                   <motion.div 
                     key={i}
                     whileHover={{ y: -10 }}
-                    className="p-10 rounded-[40px] bg-card border border-border hover:border-primary/50 transition-all duration-500 shadow-xl relative overflow-hidden group flex flex-col"
+                    className="p-8 md:p-10 rounded-[32px] md:rounded-[40px] bg-card border border-border hover:border-primary/50 transition-all duration-500 shadow-xl relative overflow-hidden group flex flex-col"
                   >
-                    {/* <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                       <BarChart3 className="w-32 h-32" />
-                    </div> */}
-                    <h3 className="text-2xl font-black mb-6 text-foreground tracking-tight">{concept.title}</h3>
-                    <div className="bg-muted px-6 py-4 rounded-2xl font-mono text-primary text-lg font-bold mb-8 border border-primary/10">
+                    <h3 className="text-xl md:text-2xl font-black mb-4 md:mb-6 text-foreground tracking-tight">{concept.title}</h3>
+                    <div className="bg-muted px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl font-mono text-primary text-base md:text-lg font-bold mb-6 md:mb-8 border border-primary/10 overflow-x-auto">
                        {concept.formula}
                     </div>
                     
@@ -267,10 +262,6 @@ export default function HowItWorks() {
                              ))}
                           </div>
                        </div>
-                       <div className="pt-4 border-t border-border mt-auto">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mb-2">Technical Insight</p>
-                          <p className="text-muted-foreground/60 text-[11px] font-bold leading-relaxed italic">{concept.technical}</p>
-                       </div>
                     </div>
                   </motion.div>
                 ))}
@@ -278,28 +269,28 @@ export default function HowItWorks() {
           </section>
 
           {/* Component Guide */}
-          <section className="mb-48 bg-muted/20 -mx-6 px-6 py-32 rounded-[60px] border border-border">
+          <section className="mb-24 md:mb-48 bg-muted/20 -mx-6 px-6 py-20 md:py-32 rounded-[40px] md:rounded-[60px] border border-border">
              <div className="container mx-auto max-w-6xl">
-                <div className="text-center mb-24">
-                   <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 text-foreground">The Periodic Table of Infrastructure</h2>
-                   <p className="text-muted-foreground text-xl font-medium">Every component has specific behavior models in our engine.</p>
+                <div className="text-center mb-16 md:mb-24">
+                   <h2 className="text-3xl md:text-6xl font-black tracking-tighter mb-4 md:mb-6 text-foreground">Infrastructure periodic table</h2>
+                   <p className="text-muted-foreground text-lg md:text-xl font-medium">Every component has specific behavior models in our engine.</p>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                    {components.map((cat, i) => (
-                     <div key={i} className="space-y-8">
-                        <h4 className="text-xs font-black uppercase tracking-[0.2em] text-primary bg-primary/10 w-fit px-3 py-1 rounded-lg">
+                     <div key={i} className="space-y-6 md:space-y-8">
+                        <h4 className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-primary bg-primary/10 w-fit px-3 py-1 rounded-lg">
                            {cat.category}
                         </h4>
-                        <div className="space-y-10">
+                        <div className="space-y-8 md:space-y-10">
                            {cat.items.map((item, j) => (
-                             <div key={j} className="flex gap-5 group">
-                                <div className="p-3.5 rounded-2xl bg-card border border-border group-hover:border-primary group-hover:bg-primary/5 transition-all h-fit shadow-sm">
-                                   <item.icon className="w-6 h-6 text-primary" />
+                             <div key={j} className="flex gap-4 md:gap-5 group">
+                                <div className="p-3 rounded-xl md:p-3.5 md:rounded-2xl bg-card border border-border group-hover:border-primary group-hover:bg-primary/5 transition-all h-fit shadow-sm">
+                                   <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                                 </div>
                                 <div>
-                                   <h5 className="font-black text-foreground mb-2 tracking-tight">{item.name}</h5>
-                                   <p className="text-[11px] text-muted-foreground font-bold leading-relaxed">{item.desc}</p>
+                                   <h5 className="font-black text-sm md:text-base text-foreground mb-1 md:mb-2 tracking-tight">{item.name}</h5>
+                                   <p className="text-[10px] md:text-[11px] text-muted-foreground font-bold leading-relaxed">{item.desc}</p>
                                 </div>
                              </div>
                            ))}
@@ -311,38 +302,35 @@ export default function HowItWorks() {
           </section>
 
           {/* System Design Examples */}
-          <section className="mb-48">
-             <div className="text-center mb-24">
-                <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 text-foreground uppercase">Pro Blueprints</h2>
-                <p className="text-muted-foreground text-xl font-medium">Proven patterns for high-performance systems.</p>
+          <section className="mb-24 md:mb-48">
+             <div className="text-center mb-16 md:mb-24">
+                <h2 className="text-3xl md:text-6xl font-black tracking-tighter mb-4 md:mb-6 text-foreground uppercase">Pro Blueprints</h2>
+                <p className="text-muted-foreground text-lg md:text-xl font-medium">Proven patterns for high-performance systems.</p>
              </div>
 
-             <div className="grid md:grid-cols-2 gap-16">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
                 {systemExamples.map((ex, i) => (
                   <div key={i} className="group cursor-default">
-                     <div className="relative p-12 rounded-[50px] bg-card border border-border group-hover:border-primary/30 transition-all duration-500 overflow-hidden shadow-2xl">
-                        {/* <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-                           <Network className="w-64 h-64" />
-                        </div> */}
-                        <h3 className="text-3xl font-black mb-4 text-foreground tracking-tight">{ex.name}</h3>
-                        <p className="text-muted-foreground font-bold leading-relaxed mb-10">{ex.description}</p>
+                     <div className="relative p-8 md:p-12 rounded-[32px] md:rounded-[50px] bg-card border border-border group-hover:border-primary/30 transition-all duration-500 overflow-hidden shadow-2xl">
+                        <h3 className="text-2xl md:text-3xl font-black mb-3 md:mb-4 text-foreground tracking-tight">{ex.name}</h3>
+                        <p className="text-muted-foreground text-sm md:text-base font-bold leading-relaxed mb-8 md:mb-10">{ex.description}</p>
                         
-                        <div className="space-y-4 mb-12">
+                        <div className="space-y-3 md:space-y-4 mb-8 md:mb-12">
                            {ex.nodes.map((node, j) => (
-                             <div key={j} className="flex items-center gap-4 bg-muted/40 px-6 py-4 rounded-2xl border border-border group-hover:translate-x-2 transition-transform duration-500" style={{ transitionDelay: `${j * 100}ms` }}>
+                             <div key={j} className="flex items-center gap-3 md:gap-4 bg-muted/40 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border border-border group-hover:translate-x-2 transition-transform duration-500" style={{ transitionDelay: `${j * 100}ms` }}>
                                 <div className="w-2 h-2 rounded-full bg-primary" />
-                                <span className="text-sm font-black text-foreground uppercase tracking-widest">{node.name}</span>
-                                <span className="ml-auto text-[10px] font-black text-muted-foreground uppercase opacity-50">{node.pos}</span>
+                                <span className="text-xs md:text-sm font-black text-foreground uppercase tracking-widest">{node.name}</span>
+                                <span className="ml-auto text-[9px] md:text-[10px] font-black text-muted-foreground uppercase opacity-50">{node.pos}</span>
                              </div>
                            ))}
                         </div>
 
-                        <div className="p-6 rounded-3xl bg-secondary/50 border border-border">
-                           <div className="flex items-center gap-3 text-secondary-foreground mb-2">
+                        <div className="p-5 md:p-6 rounded-2xl md:rounded-3xl bg-secondary/50 border border-border">
+                           <div className="flex items-center gap-2 md:gap-3 text-secondary-foreground mb-1 md:mb-2">
                               <Zap className="w-4 h-4 fill-primary text-primary" />
-                              <span className="text-xs font-black uppercase tracking-widest">Architect Tip</span>
+                              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest">Architect Tip</span>
                            </div>
-                           <p className="text-sm text-muted-foreground/80 font-bold italic leading-relaxed">{ex.tip}</p>
+                           <p className="text-xs md:text-sm text-muted-foreground/80 font-bold italic leading-relaxed">{ex.tip}</p>
                         </div>
                      </div>
                   </div>
@@ -351,13 +339,13 @@ export default function HowItWorks() {
           </section>
 
           {/* Interactive Blueprint Section */}
-          <section className="mb-48">
-             <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 text-foreground uppercase">Live Blueprint Demo</h2>
-                <p className="text-muted-foreground text-lg font-medium">A glimpse into how nodes connect and interact in real-time.</p>
+          <section className="mb-24 md:mb-48">
+             <div className="text-center mb-10 md:mb-16">
+                <h2 className="text-3xl md:text-5xl font-black tracking-tighter mb-3 md:mb-4 text-foreground uppercase">Live Blueprint Demo</h2>
+                <p className="text-muted-foreground text-base md:text-lg font-medium px-4">A glimpse into how nodes connect and interact in real-time.</p>
              </div>
              
-             <div className="h-[600px] w-full rounded-[40px] border border-border bg-muted/10 relative overflow-hidden shadow-2xl">
+             <div className="h-[400px] md:h-[600px] w-full rounded-[32px] md:rounded-[40px] border border-border bg-muted/10 relative overflow-hidden shadow-2xl">
                 <ReactFlow
                    nodes={initialNodes}
                    edges={initialEdges}
@@ -374,12 +362,12 @@ export default function HowItWorks() {
                 </ReactFlow>
                 
                 {/* Overlay Info */}
-                <div className="absolute bottom-10 left-10 p-6 rounded-3xl bg-background/80 backdrop-blur-md border border-border shadow-xl max-w-xs z-10">
-                   <div className="flex items-center gap-2 text-primary mb-2">
-                      <Zap size={14} className="fill-primary" />
+                <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 p-4 md:p-6 rounded-2xl md:rounded-3xl bg-background/80 backdrop-blur-md border border-border shadow-xl max-w-[240px] md:max-w-xs z-10">
+                   <div className="flex items-center gap-2 text-primary mb-1 md:mb-2">
+                      <Zap size={12} className="fill-primary" />
                       <span className="text-[10px] font-black uppercase tracking-widest">Simulation Feed</span>
                    </div>
-                   <p className="text-xs text-muted-foreground font-bold leading-relaxed">
+                   <p className="text-[10px] md:text-xs text-muted-foreground font-bold leading-relaxed">
                       In the actual dashboard, these connections carry real Poisson-distributed traffic flows!
                    </p>
                 </div>
@@ -387,13 +375,13 @@ export default function HowItWorks() {
           </section>
 
           {/* CTA / Final Word */}
-          <section className="text-center p-20 rounded-[60px] bg-primary relative overflow-hidden group">
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(0,0,0,0.1),transparent)] opacity-50"></div>
+          <section className="text-center p-12 md:p-20 rounded-[40px] md:rounded-[60px] bg-primary relative overflow-hidden group">
+             <div className="absolute inset-0 bg-[radial-gradient(circle_at:30%_50%,rgba(0,0,0,0.1),transparent)] opacity-50"></div>
              <div className="relative z-10">
-                <h2 className="text-4xl md:text-7xl font-black tracking-tighter text-primary-foreground mb-10">Stop guessing. <br/> Start simulating.</h2>
-                <Button asChild size="lg" className="h-16 px-12 bg-white text-primary border-none hover:bg-opacity-90 transition-all shadow-2xl rounded-[20px] font-black text-lg">
-                   <a href="/dashboard" className="flex items-center gap-4">
-                      Open Explorer <ArrowRight className="w-6 h-6" />
+                <h2 className="text-3xl md:text-7xl font-black tracking-tighter text-primary-foreground mb-8 md:mb-10">Stop guessing. <br className="hidden md:block"/> Start simulating.</h2>
+                <Button asChild size="lg" className="h-14 md:h-16 px-8 md:px-12 bg-white text-primary border-none hover:bg-opacity-90 transition-all shadow-2xl rounded-[16px] md:rounded-[20px] font-black text-base md:text-lg w-full sm:w-auto">
+                   <a href="/dashboard" className="flex items-center justify-center gap-4">
+                      Open Explorer <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
                    </a>
                 </Button>
              </div>
@@ -402,13 +390,13 @@ export default function HowItWorks() {
       </main>
 
       {/* Footer (Simplified for this page) */}
-      <footer className="py-24 border-t border-border mt-32">
+      <footer className="py-16 md:py-24 border-t border-border mt-16 md:mt-32">
          <div className="container mx-auto px-6 text-center">
-            <div className="flex items-center justify-center gap-4 mb-12">
-               <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center font-mono font-black text-2xl text-primary-foreground">S</div>
-               <span className="font-black text-3xl tracking-tighter text-foreground uppercase">ScaleInfra</span>
+            <div className="flex items-center justify-center gap-3 md:gap-4 mb-8 md:mb-12">
+               <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary flex items-center justify-center font-mono font-black text-xl md:text-2xl text-primary-foreground">S</div>
+               <span className="font-black text-2xl md:text-3xl tracking-tighter text-foreground uppercase">ScaleInfra</span>
             </div>
-            <p className="text-muted-foreground font-bold uppercase tracking-[0.3em] text-[10px]">
+            <p className="text-muted-foreground font-bold uppercase tracking-[0.3em] text-[9px] md:text-[10px]">
                Built for Architecture. Powered by Math. 
             </p>
          </div>
