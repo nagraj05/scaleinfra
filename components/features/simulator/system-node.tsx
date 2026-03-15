@@ -145,23 +145,37 @@ export function SystemNode({ id, data, selected }: any) {
 
       {/* Metrics Overlay */}
       {data.isRunning && (
-        <div className="absolute -top-12 left-0 right-0 flex flex-col items-center pointer-events-none">
+        <div className="absolute -top-14 left-0 right-0 flex flex-col items-center pointer-events-none">
           <div className="bg-background/90 backdrop-blur-sm border rounded px-2 py-1 flex gap-3 shadow-sm border-primary/20">
             <div className="flex flex-col items-center">
-              <span className="text-[8px] uppercase text-muted-foreground font-bold">RPM</span>
+              <span className="text-[8px] uppercase text-muted-foreground font-bold">Load</span>
               <span className={cn("text-xs font-mono font-bold", metrics.rpm > 0 ? "text-primary" : "text-muted-foreground")}>
                 {Math.round(metrics.rpm)}
               </span>
             </div>
             <div className="flex flex-col items-center border-l pl-3">
-              <span className="text-[8px] uppercase text-muted-foreground font-bold">Lat</span>
+              <span className="text-[8px] uppercase text-muted-foreground font-bold">Usage</span>
+              <span className={cn("text-xs font-mono font-bold", metrics.utilization >= 1 ? "text-destructive" : "text-emerald-500")}>
+                {Math.round(metrics.utilization * 100)}%
+              </span>
+            </div>
+            <div className="flex flex-col items-center border-l pl-3">
+              <span className="text-[8px] uppercase text-muted-foreground font-bold">Latency</span>
               <span className="text-xs font-mono font-bold text-sky-500">
                 {metrics.latency}ms
               </span>
             </div>
+            {metrics.queueLength > 0 && (
+              <div className="flex flex-col items-center border-l pl-3">
+                <span className="text-[8px] uppercase text-orange-500 font-bold">Waiting</span>
+                <span className="text-xs font-mono font-bold text-orange-500">
+                  {Math.round(metrics.queueLength)}
+                </span>
+              </div>
+            )}
             {metrics.errorRate > 0 && (
               <div className="flex flex-col items-center border-l pl-3">
-                <span className="text-[8px] uppercase text-destructive font-bold">ERR</span>
+                <span className="text-[8px] uppercase text-destructive font-bold">Errors</span>
                 <span className="text-xs font-mono font-bold text-destructive">
                   {Math.round(metrics.errorRate * 100)}%
                 </span>

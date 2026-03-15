@@ -35,8 +35,8 @@ export function Navbar() {
         
         <div className="flex items-center gap-10">
           <div className="hidden md:flex items-center gap-10">
-            <Link href="#features" className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Features</Link>
-            <Link href="#pricing" className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
+            <Link href="/how-it-works" className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">How It Works</Link>
+            <Link href="/#pricing" className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
           </div>
           
           <div className="flex items-center gap-6 border-l border-border pl-8 ml-2">

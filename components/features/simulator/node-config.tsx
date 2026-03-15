@@ -1,7 +1,7 @@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Cpu, Zap, AlertTriangle, Activity, Terminal } from "lucide-react";
+import { Cpu, Zap, AlertTriangle, Activity, Terminal, Layers } from "lucide-react";
 
 interface NodeConfigProps {
   node: any;
@@ -72,15 +72,15 @@ export function NodeConfig({ node, onUpdate }: NodeConfigProps) {
                     <Terminal className="w-5 h-5 text-blue-500" />
                   </div>
                   <label className="text-xs font-black uppercase tracking-widest text-foreground">
-                    Active Users / Load
+                    Inbound Traffic
                   </label>
                 </div>
                 <span className="text-sm font-black text-blue-500 font-mono tracking-tighter">
-                  {config.load} req/s
+                  {config.load || 100} req/s
                 </span>
               </div>
               <Slider
-                value={[config.load]}
+                value={[config.load || 100]}
                 min={0}
                 max={10000}
                 step={50}
@@ -88,7 +88,7 @@ export function NodeConfig({ node, onUpdate }: NodeConfigProps) {
                 className="py-4 cursor-pointer"
               />
               <p className="text-[10px] text-muted-foreground font-bold italic">
-                Simulates the number of requests per second initiated by users.
+                Poisson arrival rate for traffic generation.
               </p>
               <Separator className="bg-border mt-8" />
             </div>
@@ -101,15 +101,15 @@ export function NodeConfig({ node, onUpdate }: NodeConfigProps) {
                   <Zap className="w-5 h-5 text-primary" />
                 </div>
                 <label className="text-xs font-black uppercase tracking-widest text-foreground">
-                  Throughput
+                  Processing Speed
                 </label>
               </div>
               <span className="text-sm font-black text-primary font-mono tracking-tighter">
-                {config.capacity} req/s
+                {config.capacity || 1000} req/s
               </span>
             </div>
             <Slider
-              value={[config.capacity]}
+              value={[config.capacity || 1000]}
               min={100}
               max={10000}
               step={100}
@@ -118,30 +118,78 @@ export function NodeConfig({ node, onUpdate }: NodeConfigProps) {
             />
           </div>
 
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                  <Layers className="w-5 h-5 text-purple-500" />
+                </div>
+                <label className="text-xs font-black uppercase tracking-widest text-foreground">
+                  Server Count
+                </label>
+              </div>
+              <span className="text-sm font-black text-purple-500 font-mono tracking-tighter">
+                {config.instances || 1}
+              </span>
+            </div>
+            <Slider
+              value={[config.instances || 1]}
+              min={1}
+              max={20}
+              step={1}
+              onValueChange={([val]) => handleChange("instances", val)}
+              className="py-4 cursor-pointer"
+            />
+          </div>
+
+          {(node.data.type === 'cache' || node.data.type === 'redis' || node.data.type === 'cdn') && (
+            <>
+              <Separator className="bg-border mt-8" />
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                      <Activity className="w-5 h-5 text-emerald-500" />
+                    </div>
+                    <label className="text-xs font-black uppercase tracking-widest text-foreground">
+                      Cache Efficiency
+                    </label>
+                  </div>
+                  <span className="text-sm font-black text-emerald-500 font-mono tracking-tighter">
+                    {config.cacheHitRate || 0}%
+                  </span>
+                </div>
+                <Slider
+                  value={[config.cacheHitRate || 0]}
+                  min={0}
+                  max={100}
+                  step={1}
+                  onValueChange={([val]) => handleChange("cacheHitRate", val)}
+                  className="py-4 cursor-pointer"
+                />
+              </div>
+            </>
+          )}
+
           <Separator className="bg-border mt-8" />
 
-          <div className="space-y-6">
+          <div className="space-y-6 opacity-50 cursor-not-allowed">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/20">
                   <Cpu className="w-5 h-5 text-sky-500" />
                 </div>
                 <label className="text-xs font-black uppercase tracking-widest text-foreground">
-                  Latency
+                  Base Latency (Fixed)
                 </label>
               </div>
               <span className="text-sm font-black text-sky-500 font-mono tracking-tighter">
-                {config.latency}ms
+                {Math.round(1000 / (config.capacity || 1000))}ms
               </span>
             </div>
-            <Slider
-              value={[config.latency]}
-              min={1}
-              max={1000}
-              step={1}
-              onValueChange={([val]) => handleChange("latency", val)}
-              className="py-4 cursor-pointer"
-            />
+            <p className="text-[10px] text-muted-foreground font-bold italic">
+              Base latency is derived from Service Rate (1/μ). Real-time latency includes queuing delay.
+            </p>
           </div>
         </TabsContent>
 

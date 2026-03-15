@@ -1,4 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
+import { 
+  calculatePoisson, 
+  calculateUtilization, 
+  calculateMMcLatency, 
+  calculateCacheTraffic 
+} from "@/lib/math-utils";
 
 export function useSimulationEngine(
   nodes: any[],
@@ -6,75 +12,91 @@ export function useSimulationEngine(
   isRunning: boolean,
   setNodes: (nds: any) => void
 ) {
-  const lastUpdateRef = useRef<number>(Date.now());
+  const queuesRef = useRef<Record<string, number>>({});
 
   const tick = useCallback(() => {
     if (!isRunning) return;
 
-    // 1. Initialize metrics for the current tick
-    const nodeMetrics: Record<string, { rpm: number; latency: number; errorRate: number }> = {};
+    // 1. Initialize metrics and aggregate incoming traffic
+    const nodeMetrics: Record<string, { incomingLambda: number; lambda: number; mu: number; instances: number; cacheHitRate: number }> = {};
+    
     nodes.forEach(node => {
-      nodeMetrics[node.id] = { rpm: 0, latency: node.data.config?.latency || 50, errorRate: 0 };
+      const config = node.data.config || {};
+      nodeMetrics[node.id] = { 
+        incomingLambda: 0, 
+        lambda: 0,
+        mu: config.capacity || 1000, 
+        instances: config.instances || 1,
+        cacheHitRate: (config.cacheHitRate || 0) / 100
+      };
+      
+      // Initialize queues if not present
+      if (queuesRef.current[node.id] === undefined) {
+        queuesRef.current[node.id] = 0;
+      }
     });
 
-    // 2. Calculate input RPM for each node
-    // Simple propagation: start with clients, move downstream
-    // For a real simulation, we'd do a BFS/DFS or just solve the flow
-    
-    // Clients are sources
+    // 2. Identify traffic sources (Clients)
     nodes.filter(n => n.data.type === 'client').forEach(client => {
-      nodeMetrics[client.id].rpm = client.data.config?.load || 100;
+      const load = client.data.config?.load || 100;
+      // Clients generate Poisson traffic
+      nodeMetrics[client.id].incomingLambda = calculatePoisson(load, 1);
     });
 
-    // Propagate through edges
-    // Note: This is a simplified 1-pass propagation. For complex graphs (loops), we'd need more logic.
-    const sortedNodes = [...nodes]; // Assume topologically sorted for simplicity or just run multiple passes
+    // 3. Traffic Propagation (Multiple passes to handle flow)
+    // In a discrete simulation, we take what was "processed" last tick and move it forward?
+    // For this MVP, we'll do simultaneous flow calculation
     
-    // Multiple passes to handle multi-step flows
-    for (let i = 0; i < 3; i++) {
+    // Sort nodes to process upstream first if possible (simplified BFS approach)
+    // For now, 3 passes as before to handle depth
+    for (let pass = 0; pass < 3; pass++) {
       edges.forEach(edge => {
         const source = edge.source;
         const target = edge.target;
         
         if (nodeMetrics[source] && nodeMetrics[target]) {
-           const sourceMetrics = nodeMetrics[source];
-           const sourceConfig = nodes.find(n => n.id === source)?.data.config || {};
-           const targetNode = nodes.find(n => n.id === target);
-           
-           // Load balancer logic: split load among outgoing edges
-           const outgoingEdges = edges.filter(e => e.source === source);
-           const share = 1 / outgoingEdges.length;
-           
-           const incomingRpm = sourceMetrics.rpm * share;
-           
-           // Apply source's successful requests (ignore errors for now or propagate them)
-           nodeMetrics[target].rpm += incomingRpm;
+          const sourceNode = nodes.find(n => n.id === source);
+          const outgoingEdges = edges.filter(e => e.source === source);
+          const splitFactor = 1 / outgoingEdges.length;
+          
+          let trafficToForward = nodeMetrics[source].incomingLambda;
+          
+          // If source is a cache, reduce traffic to database
+          if (sourceNode?.data.type === 'cache' || sourceNode?.data.type === 'redis') {
+            trafficToForward = calculateCacheTraffic(trafficToForward, nodeMetrics[source].cacheHitRate);
+          }
+          
+          nodeMetrics[target].incomingLambda += trafficToForward * splitFactor;
         }
       });
     }
 
-    // 3. Apply constraints (Capacity) and calculate final metrics
+    // 4. Update Node State with Mathematical Models
     const updatedNodes = nodes.map(node => {
       const metrics = nodeMetrics[node.id];
-      const config = node.data.config || { capacity: 1000, latency: 50 };
+      const lambda = metrics.incomingLambda;
+      const mu = metrics.mu;
+      const c = metrics.instances;
       
-      let finalRpm = metrics.rpm;
-      let baseLatency = config.latency || 50;
-      let errorRate = (node.data.config?.errorRate / 100) || 0;
+      const utilization = calculateUtilization(lambda, mu, c);
       
-      // Dynamic Latency & Error Rate based on load
-      // As RPM approaches capacity, latency increases (Queuing Delay)
-      const loadFactor = finalRpm / config.capacity;
+      // Calculate Real-time Latency (M/M/c model)
+      // Latency is in seconds, convert to ms
+      const latency = calculateMMcLatency(lambda, mu, c) * 1000;
       
-      let effectiveLatency = baseLatency;
-      if (loadFactor > 0.8) {
-        // Exponential latency growth near capacity
-        effectiveLatency = Math.round(baseLatency * (1 + Math.pow(loadFactor - 0.8, 2) * 10));
-      }
+      // Queue update (Discrete time logic)
+      // processed = min(queue + new_requests, capacity)
+      const capacity = mu * c;
+      const arrivals = lambda;
+      const currentQueue = queuesRef.current[node.id] || 0;
+      const processed = Math.min(currentQueue + arrivals, capacity);
+      const newQueue = (currentQueue + arrivals) - processed;
+      queuesRef.current[node.id] = newQueue;
 
-      if (loadFactor > 1) {
-        // High error rate beyond capacity
-        errorRate += (finalRpm - config.capacity) / finalRpm;
+      // Error Rate increases beyond capacity (Maths.md 13)
+      let errorRate = (node.data.config?.errorRate / 100) || 0;
+      if (utilization > 1) {
+        errorRate += (lambda - capacity) / lambda;
       }
 
       return {
@@ -82,9 +104,11 @@ export function useSimulationEngine(
         data: {
           ...node.data,
           metrics: {
-            rpm: finalRpm,
-            latency: Math.min(effectiveLatency, 5000), // Cap at 5s
-            errorRate: Math.min(errorRate, 1)
+            rpm: lambda,
+            latency: Math.min(Math.round(latency), 10000), // Cap at 10s
+            errorRate: Math.min(errorRate, 1),
+            utilization: utilization,
+            queueLength: newQueue
           }
         }
       };
@@ -94,11 +118,15 @@ export function useSimulationEngine(
   }, [nodes, edges, isRunning, setNodes]);
 
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning) {
+      // Reset queues when stopped
+      queuesRef.current = {};
+      return;
+    }
 
     const interval = setInterval(() => {
       tick();
-    }, 1000); // Update every second
+    }, 1000); 
 
     return () => clearInterval(interval);
   }, [isRunning, tick]);

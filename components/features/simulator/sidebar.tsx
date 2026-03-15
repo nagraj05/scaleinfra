@@ -98,6 +98,13 @@ const elements = [
     category: "Infrastructure",
   },
   {
+    type: "server",
+    label: "App Server",
+    icon: Server,
+    color: "text-orange-400",
+    category: "Services",
+  },
+  {
     type: "microservice",
     label: "Microservice",
     icon: Cpu,
