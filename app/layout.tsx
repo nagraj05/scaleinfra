@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ScaleInfra",
-description: "ScaleInfra - The Ultimate System Simulator",
+  title: "ScaleInfra - The Ultimate System Design Simulator",
+  description: "ScaleInfra - The Ultimate System Design Simulator",
 };
 
 export default function RootLayout({

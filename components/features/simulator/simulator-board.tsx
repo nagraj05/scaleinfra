@@ -337,18 +337,17 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
           <div className="flex items-center gap-4">
              <Button
                variant="outline"
-               size="lg"
+               size="sm"
                onClick={handleBack}
-               className="gap-3 h-11 px-6 bg-card/[0.05] hover:bg-accent border-border transition-all font-black text-sm uppercase tracking-widest rounded-xl"
+              //  className="gap-3 h-11 px-6 bg-card/[0.05] hover:bg-accent border-border transition-all font-black text-sm uppercase tracking-widest rounded-xl"
              >
                <ChevronLeft className="w-5 h-5 text-primary" /> 
                <span className="text-foreground">Dashboard</span>
              </Button>
-             <div className="h-11 px-6 bg-card border border-border rounded-xl shadow-sm flex items-center gap-4">
-               <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
+             <div className="h-7 px-3 bg-card border border-border rounded-xl shadow-sm flex items-center gap-2">
+               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                <div className="flex flex-col justify-center">
-                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary leading-none mb-1">Active Design</span>
-                 <span className="text-sm font-black text-foreground tracking-tight leading-none uppercase">{initialData.name}</span>
+                 <span className="text-xs font-black text-foreground tracking-tight leading-none uppercase">{initialData.name}</span>
                </div>
              </div>
           </div>
@@ -358,23 +357,23 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
               variant="outline"
               onClick={handleSave}
               disabled={saving}
-              className="gap-3 h-11 px-6 font-black uppercase tracking-widest border-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
+              // className="gap-3 h-11 px-6 font-black uppercase tracking-widest border-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
             >
               <Save className="w-5 h-5" />
-              {saving ? "Saving..." : "Save Simulation"}
+              {saving ? "Saving..." : "Save"}
             </Button>
             <Button
               variant={isRunning ? "destructive" : "default"}
               onClick={toggleSimulation}
-              className="gap-3 h-11 px-8 font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all duration-300 rounded-xl"
+              // className="gap-3 h-11 px-8 font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all duration-300 rounded-xl"
             >
               {isRunning ? (
                 <>
-                  <Trash2 className="w-5 h-5 fill-current" /> Stop Simulation
+                  <Trash2 className="w-5 h-5 fill-current" /> Stop
                 </>
               ) : (
                 <>
-                  <Play className="w-5 h-5 fill-current" /> Start Simulation
+                  <Play className="w-5 h-5 fill-current" /> Start
                 </>
               )}
             </Button>
