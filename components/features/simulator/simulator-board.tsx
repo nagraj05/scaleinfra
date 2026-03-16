@@ -183,7 +183,10 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
               ...node,
               data: {
                 ...node.data,
-                config,
+                config: {
+                  ...(node.data.config || {}),
+                  ...config,
+                },
               },
             };
           }
