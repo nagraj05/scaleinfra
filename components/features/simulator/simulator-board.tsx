@@ -365,6 +365,7 @@ export function SimulatorBoard({ initialData }: { initialData: any }) {
             <Button
               variant={isRunning ? "destructive" : "default"}
               onClick={toggleSimulation}
+              disabled={nodes.length === 0}
               // className="gap-3 h-11 px-8 font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all duration-300 rounded-xl"
             >
               {isRunning ? (
