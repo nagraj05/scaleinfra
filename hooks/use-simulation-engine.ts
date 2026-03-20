@@ -96,7 +96,7 @@ export function useSimulationEngine(
       // Error Rate increases beyond capacity (Maths.md 13)
       let errorRate = (node.data.config?.errorRate / 100) || 0;
       if (utilization > 1) {
-        errorRate += (lambda - capacity) / lambda;
+        errorRate += lambda > 0 ? (lambda - capacity) / lambda : 0;
       }
 
       return {
