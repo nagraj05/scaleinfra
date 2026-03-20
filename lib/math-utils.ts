@@ -25,14 +25,17 @@ export function calculatePoisson(lambda: number, dt: number = 1): number {
  * rho = lambda / (c * mu)
  */
 export function calculateUtilization(lambda: number, mu: number, c: number = 1): number {
-  if (mu <= 0 || c <= 0) return 1;
-  return lambda / (c * mu);
+  if (mu <= 0 || c <= 0 || lambda < 0) return 1;
+  const utilization = lambda / (c * mu);
+  return Number.isFinite(utilization) ? utilization : 1;
 }
 
 /**
  * 6. Multi Server Queue (M/M/c) - Probability system is empty
  */
 function calculateP0(lambda: number, mu: number, c: number): number {
+  if (mu <= 0 || c <= 0 || lambda < 0) return 0;
+
   const rho = calculateUtilization(lambda, mu, c);
   const r = lambda / mu;
   
@@ -50,6 +53,8 @@ function calculateP0(lambda: number, mu: number, c: number): number {
  * Lq = (P0 * (lambda/mu)^c * rho) / (c! * (1-rho)^2)
  */
 export function calculateQueueLength(lambda: number, mu: number, c: number): number {
+  if (mu <= 0 || c <= 0 || lambda < 0) return Infinity;
+
   const rho = calculateUtilization(lambda, mu, c);
   if (rho >= 1) return Infinity; // System is overloaded
   
@@ -65,6 +70,7 @@ export function calculateQueueLength(lambda: number, mu: number, c: number): num
  * Wq = Lq / lambda
  */
 export function calculateMMcLatency(lambda: number, mu: number, c: number): number {
+  if (mu <= 0 || c <= 0) return Infinity;
   if (lambda <= 0) return 1 / mu;
   
   const rho = calculateUtilization(lambda, mu, c);
@@ -76,7 +82,7 @@ export function calculateMMcLatency(lambda: number, mu: number, c: number): numb
   }
   
   const lq = calculateQueueLength(lambda, mu, c);
-  const wq = lq / lambda;
+  const wq = lambda > 0 ? lq / lambda : 0;
   
   return wq + (1 / mu);
 }
