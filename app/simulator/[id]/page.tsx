@@ -25,10 +25,19 @@ export default async function SimulatorPage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="h-screen w-screen flex flex-col bg-background overflow-hidden relative">
+      {/* Mobile warning overlay */}
+      <div className="md:hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-background px-8 text-center">
+        <div className="text-4xl mb-4">🖥️</div>
+        <h2 className="text-xl font-semibold mb-2">Better on larger screens</h2>
+        <p className="text-muted-foreground text-sm">
+          The simulator is not ideal for mobile devices. Please open it on a desktop or tablet for the best experience.
+        </p>
+      </div>
+
       <Navbar />
       {/* Spacer to account for fixed navbar */}
       <div className="h-20 w-full shrink-0" />
-      
+
       <main className="flex-grow p-4 overflow-hidden relative">
         <SimulatorContainer initialData={simulation} />
       </main>
